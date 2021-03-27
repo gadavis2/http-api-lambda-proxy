@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: An API Gateway HTTP API with a default route and Lambda proxy integration
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: http-api-lambda-proxy
+    Description: An API Gateway HTTP API with a default route and Lambda proxy integration
+    Author: Greg Davis
+    SpdxLicenseId: MIT
+    LicenseUrl: s3://serverless-app-repo-gadavis2/cdce770eabcfebd2ff2ccb75b3f4fa41
+    ReadmeUrl: s3://serverless-app-repo-gadavis2/ec0d55791175822b8bd0335742f92b2a
+    Labels:
+    - api
+    - http
+    - v2
+    - proxy
+    - lambda
+    - function
+    - nodejs
+    HomePageUrl: https://github.com/gadavis2/http-api-lambda-proxy
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/gadavis2/http-api-lambda-proxy
+Globals:
+  Function:
+    CodeUri: ./function
+    Runtime: nodejs14.x
+    MemorySize: 128
+    Timeout: 15
+Parameters:
+  AppName:
+    Description: Name of Application
+    Type: String
+    Default: http-api-lambda-proxy
+Resources:
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name:
+        Ref: AppName
+      Description: An API Gateway HTTP API with a default route and Lambda proxy integration
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+        - '*'
+        AllowMethods:
+        - GET
+        - HEAD
+        - OPTIONS
+        - POST
+      Target:
+        Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaFunction}/invocations
+  FunctionExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: ${AppName}-function-role
+      Description:
+        Fn::Sub: Function Exectuion Role for ${AppName}-function
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AppName}-function
+      Handler: get-event.handler
+      Role:
+        Fn::GetAtt:
+        - FunctionExecutionRole
+        - Arn
+      Environment:
+        Variables:
+          Variable1: 1234
+          Variable2: ABCD
+      CodeUri: s3://serverless-app-repo-gadavis2/b76e5760bdfcc9af40583859db4cc362
+  FunctionResourcePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      FunctionName:
+        Ref: LambdaFunction
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*
+Outputs:
+  HttpApiEndpoint:
+    Description: The default endpoint for the HTTP API.
+    Value:
+      Fn::GetAtt:
+      - HttpApi
+      - ApiEndpoint

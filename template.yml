@@ -9,7 +9,7 @@ Metadata:
     SpdxLicenseId: MIT
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels: ['api gateway', 'http api', 'v2', 'proxy', 'lambda', 'function', 'nodejs', 'node.js']
+    Labels: ['api', 'http', 'v2', 'proxy', 'lambda', 'function', 'nodejs']
     HomePageUrl: https://github.com/gadavis2/http-api-lambda-proxy
     SemanticVersion: 0.0.1
     SourceCodeUrl: https://github.com/gadavis2/http-api-lambda-proxy

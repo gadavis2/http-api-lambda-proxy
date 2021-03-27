@@ -17,7 +17,7 @@ Response:
 ```
 
 Example POST Request: https://{HttpApiId}.execute-api.us-east-2.amazonaws.com/path1/path2?foo=bar
-- Request Header: Content-Type = application/json
+- Request Header: "Content-Type: application/json"
 - Request Body: {"key1":"value1", "key2":"value2"}
 
 Response: 

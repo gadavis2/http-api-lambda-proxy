@@ -8,5 +8,5 @@ s3_prefix = "http-api-lambda-proxy"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-tags = "Project=\"http-api-lambda-proxy\" Author=\"greg-davis\""
+tags = "Project=\"http-api-lambda-proxy\" Author=\"Greg Davis\" SourceCodeUrl=\"https://github.com/gadavis2/http-api-lambda-proxy\""
 parameter_overrides = "ApiName=\"http-api-lambda-proxy\""

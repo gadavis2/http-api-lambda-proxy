@@ -1,35 +1,37 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: 'AWS::Serverless-2016-10-31'
-Description: Create an HTTP API with a default route and Lambda proxy integration
+Description: An API Gateway HTTP API with a default route and Lambda proxy integration
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: http-api-lambda-proxy
-    Description: HTTP API with a default route and Lambda proxy integration
+    Description: An API Gateway HTTP API with a default route and Lambda proxy integration
     Author: Greg Davis
     SpdxLicenseId: MIT
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels: ['api gateway', 'http api', 'v2', 'proxy', 'lambda', 'function', 'nodejs']
+    Labels: ['api gateway', 'http api', 'v2', 'proxy', 'lambda', 'function', 'nodejs', 'node.js']
     HomePageUrl: https://github.com/gadavis2/http-api-lambda-proxy
     SemanticVersion: 0.0.1
     SourceCodeUrl: https://github.com/gadavis2/http-api-lambda-proxy
+# Global values that are applied to all applicable resources in this template
 Globals:
   Function:
-    CodeUri: .
+    CodeUri: ./function
     Runtime: nodejs14.x
     MemorySize: 128
     Timeout: 15
 Parameters:
-  ApiName:
-    Description: Name of Api
+  AppName:
+    Description: Name of Application
     Type: String
     Default: http-api-lambda-proxy
 Resources:
+  # API Gateway HTTP API
   HttpApi:
     Type: 'AWS::ApiGatewayV2::Api'
     Properties:
-      Name: !Ref ApiName
-      Description: HTTP API with a default route and Lambda proxy integration
+      Name: !Ref AppName
+      Description: An API Gateway HTTP API with a default route and Lambda proxy integration
       ProtocolType: HTTP
       CorsConfiguration:
         AllowOrigins:
@@ -40,10 +42,12 @@ Resources:
           - OPTIONS
           - POST
       Target: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaFunction}/invocations
+  # IAM Role that defines the services the function can access and which actions the function can perform
   FunctionExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !Sub '${ApiName}-function-role'
+      RoleName: !Sub '${AppName}-function-role'
+      Description: !Sub 'Function Exectuion Role for ${AppName}-function'
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -55,12 +59,19 @@ Resources:
                 - lambda.amazonaws.com
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  # Lambda Function - uses Globals to define additional configuration values
   LambdaFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: !Sub '${ApiName}-function'
-      Handler: function/get-event.handler
+      FunctionName: !Sub '${AppName}-function'
+      Handler: get-event.handler
       Role: !GetAtt FunctionExecutionRole.Arn
+      # Example function environment variables
+      Environment:
+        Variables:
+          Variable1: 1234
+          Variable2: ABCD
+  # Function permissions grant an AWS service or another account permission to use a function
   FunctionResourcePermission:
     Type: 'AWS::Lambda::Permission'
     Properties:

@@ -40,7 +40,7 @@ Resources:
           - OPTIONS
           - POST
       Target: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaFunction}/invocations
-  LambdaFunctionRole:
+  FunctionExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
       RoleName: !Sub '${ApiName}-function-role'
@@ -60,8 +60,8 @@ Resources:
     Properties:
       FunctionName: !Sub '${ApiName}-function'
       Handler: function/get-event.handler
-      Role: !GetAtt LambdaFunctionRole.Arn
-  LambdaFunctionApiEventPermission:
+      Role: !GetAtt FunctionExecutionRole.Arn
+  FunctionResourcePermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'

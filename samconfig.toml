@@ -2,10 +2,11 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "http-api"
+stack_name = "http-api-lambda-proxy"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1l1jcu44qrwgl"
-s3_prefix = "http-api"
+s3_prefix = "http-api-lambda-proxy"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "LambdaFunction=\"api-get-badges-function\""
+tags = "Project=\"http-api-lambda-proxy\" Author=\"greg-davis\""
+parameter_overrides = "ApiName=\"http-api-lambda-proxy\""

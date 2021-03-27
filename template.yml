@@ -43,6 +43,7 @@ Resources:
   LambdaFunctionRole:
     Type: 'AWS::IAM::Role'
     Properties:
+      RoleName: !Sub '${ApiName}-function-role'
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:

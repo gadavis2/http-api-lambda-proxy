@@ -5,7 +5,7 @@ version = 0.1
 stack_name = "http-api-lambda-proxy"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1l1jcu44qrwgl"
 s3_prefix = "http-api-lambda-proxy"
-region = "us-east-2"
+region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 tags = "Project=\"http-api-lambda-proxy\" Author=\"Greg Davis\" SourceCodeUrl=\"https://github.com/gadavis2/http-api-lambda-proxy\""

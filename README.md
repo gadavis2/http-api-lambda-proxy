@@ -1,5 +1,5 @@
 ## Overview of http-api-lambda-proxy
-This serverless application deploys an Amazon API Gateway HTTP API with a default route and basic CORS configuration. The default route is integrated with a Lambda function that logs the API event (v2) to a CloudWatch Logs log group and returns basic information about the event to the caller.
+This serverless application deploys an Amazon API Gateway HTTP API with a default route and basic CORS configuration. The default route is integrated with a Lambda function (nodejs) that logs the API event (v2) to a CloudWatch Logs log group and returns basic information about the event to the caller.
 
 ## Test the application
 Once the application is deployed, retrieve the HttpApiEndpoint value from CloudFormation Outputs. Either browse to the endpoint in a web browser or call the endpoint from Postman.
